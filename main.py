@@ -1,4 +1,5 @@
 import data
+from time import sleep
 from selenium import webdriver
 from selenium.webdriver import Keys
 from selenium.webdriver.common.by import By
@@ -30,7 +31,8 @@ def retrieve_phone_code(driver) -> str:
             continue
         if not code:
             raise Exception("No se encontró el código de confirmación del teléfono.\n"
-                            "Utiliza 'retrieve_phone_code' solo después de haber solicitado el código en tu aplicación.")
+                            "Utiliza 'retrieve_phone_code' solo después de haber solicitado el código en tu "
+                            "aplicación.")
         return code
 
 
@@ -53,22 +55,31 @@ class UrbanRoutesPage:
     def get_to(self):
         return self.driver.find_element(*self.to_field).get_property('value')
 
+    # Set_route combina métodos de las direcciones ingresadas en from y to para practicidad
+    def set_route(self, address_from, address_to):
+        self.set_from(address_from)
+        self.set_to(address_to)
 
 
 class TestUrbanRoutes:
-
     driver = None
 
     @classmethod
     def setup_class(cls):
-        # no lo modifiques, ya que necesitamos un registro adicional habilitado para recuperar el código de confirmación del teléfono
-        from selenium.webdriver import DesiredCapabilities
-        capabilities = DesiredCapabilities.CHROME
-        capabilities["goog:loggingPrefs"] = {'performance': 'ALL'}
-        cls.driver = webdriver.Chrome(desired_capabilities=capabilities)
+        # no lo modifiques, ya que necesitamos un registro adicional habilitado para recuperar el código de
+        # confirmación del teléfono
+        #from selenium.webdriver import DesiredCapabilities
+        #capabilities = DesiredCapabilities.CHROME
+        #capabilities["goog:loggingPrefs"] = {'performance': 'ALL'}
+        #cls.driver = webdriver.Chrome(desired_capabilities=capabilities)
+        cls.driver = webdriver.Chrome()
 
     def test_set_route(self):
         self.driver.get(data.urban_routes_url)
+
+        # Colocamos un timer para que cargue la página
+        sleep(2)
+
         routes_page = UrbanRoutesPage(self.driver)
         address_from = data.address_from
         address_to = data.address_to
@@ -76,6 +87,8 @@ class TestUrbanRoutes:
         assert routes_page.get_from() == address_from
         assert routes_page.get_to() == address_to
 
+        # Otro tiempo para visualizar los cambios
+        sleep (2)
 
     @classmethod
     def teardown_class(cls):
