@@ -172,6 +172,13 @@ class UrbanRoutesPage:
     def click_requests_to_driver(self):
         self.driver.find_element(*self.requests_to_driver_header).click()
 
+    def get_slider_color_manta_y_panuelos(self):
+        slider_element = self.driver.find_element(*self.switch_manta_y_panuelos)
+
+        # Extrae el color del fondo del atributo de estilo
+        color = slider_element.value_of_css_property('background-color')
+        return color
+
     def click_request_manta_y_panuelos(self):
         self.driver.find_element(*self.switch_manta_y_panuelos).click()
 
@@ -286,16 +293,7 @@ class TestUrbanRoutes:
         # Clic en el botón 'Siguiente' para enviar el número de teléfono
         routes_page.click_next_in_phone_window()
 
-        # Se obtiene el código recibido por el número de teléfono
-        code_phone = retrieve_phone_code(self.driver)
-
-        # Se ingresa el código SMS en la celda respectiva
-        # routes_page.set_code_sms(code_phone)
-
-        # Clic en el botón 'Confirmar' de la ventana del código SMS
-        # routes_page.click_confirm_in_sms_window()
-
-        # Clic en el botón X para cerrar la celda, como alternativa al no funcionamiento del código SMS
+        # Clic en el botón X para cerrar la celda
         routes_page.click_close_sms_window()
 
         # Se comprueba que el valor del campo de texto 'phone' sea el mismo ingresado en la data
@@ -388,10 +386,18 @@ class TestUrbanRoutes:
         # Se hace click a la opción de tarifa escogida según el dato tariff_option
         routes_page.click_tariff_option(tariff_option)
 
+        # Se obtiene la posición inicial del slider
+        color_inicial = routes_page.get_slider_color_manta_y_panuelos()
+
         # Habilitar el switch para solicitar manta y pañuelos
         routes_page.click_request_manta_y_panuelos()
 
-        pass
+        routes_page.wait_for_seconds(3)
+        # Se obtiene la posición final del slider
+        color_final = routes_page.get_slider_color_manta_y_panuelos()
+
+        # Se comprueba que la posición final del slider sea mayor y por tanto indique que se activó
+        assert color_final != color_inicial
 
     # Prueba 7. Pedir 2 helados
     def test_add_2_ice_creams(self):
