@@ -1,10 +1,9 @@
-urban_routes_url = 'https://cnt-83a15c29-c15c-4c7f-b5ff-46d13fa790b2.containerhub.tripleten-services.com?lng=es'
+urban_routes_url = 'https://cnt-f24ac707-bb8b-4729-8cf5-d5cedb0cb23b.containerhub.tripleten-services.com?lng=es'
 address_from = 'East 2nd Street, 601'
 address_to = '1300 1st St'
 phone_number = '+1 123 123 12 12'
 card_number, card_code = '1234 5678 9100', '111'
 message_for_driver = 'Muéstrame el camino al museo'
 tariff_option = 'Comfort'
-#request_manta_y_panuelos = True
 n_ice_creams = '2'
 modal_searching_message = 'Buscar automóvil'
